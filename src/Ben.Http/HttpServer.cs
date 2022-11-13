@@ -23,7 +23,7 @@ namespace Ben.Http
         private ILoggerFactory _loggerFactory;
         private IServer _server;
 
-        public IFeatureCollection Features => _server.Features;
+        public IFeatureCollection? Features => _server.Features;
 
         public HttpServer(string listenAddress) : this(DefaultLoggerFactories.Empty)
         {
@@ -117,7 +117,7 @@ namespace Ben.Http
 
             public ConsoleLoggerOptions CurrentValue { get; } = new ConsoleLoggerOptions();
 
-            public ConsoleLoggerOptions Get(string name) => CurrentValue;
+            public ConsoleLoggerOptions Get(string? name) => CurrentValue;
 
             public IDisposable OnChange(Action<ConsoleLoggerOptions, string> listener)
                 => NullDisposable.Shared;

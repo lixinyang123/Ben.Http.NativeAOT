@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>PlaintextJson</RootNamespace>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
+	<PublishAot>true</PublishAot>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Ben.Http\Ben.Http.csproj" />

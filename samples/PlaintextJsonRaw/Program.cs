@@ -1,56 +1,60 @@
-using System;
+using Ben.Http;
+using Microsoft.Net.Http.Headers;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Net.Http.Headers;
 using static System.Console;
 
-using Ben.Http;
-
-var port = 8080;
-
-var server = new HttpServer($"http://+:{port}");
-var app = new HttpApp();
-
-// Assign routes
-app.Get("/plaintext", Plaintext);
-app.Get("/json", Json);
-
-Write($"{server} {app}"); // Display listening info
-
-await server.RunAsync(app);
-
-// Route methods
-async Task Plaintext(Request request, Response response)
+internal class Program
 {
-    var payload = Settings.HelloWorld;
+    [RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.SerializeAsync<TValue>(Stream, TValue, JsonSerializerOptions, CancellationToken)")]
+    [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.SerializeAsync<TValue>(Stream, TValue, JsonSerializerOptions, CancellationToken)")]
+    private static async Task Main(string[] args)
+    {
+        int port = 8080;
 
-    var headers = response.Headers;
+        HttpServer server = new($"http://+:{port}");
+        HttpApp app = new();
 
-    headers.ContentLength = payload.Length;
-    headers[HeaderNames.ContentType] = "text/plain";
+        // Assign routes
+        app.Get("/plaintext", (request, response) =>
+        {
+            byte[] payload = Settings.HelloWorld;
 
-    await response.Writer.WriteAsync(payload);
-}
+            Microsoft.AspNetCore.Http.IHeaderDictionary headers = response.Headers;
 
-static Task Json(Request request, Response response)
-{
-    var headers = response.Headers;
+            headers.ContentLength = payload.Length;
+            headers[HeaderNames.ContentType] = "text/plain";
 
-    headers.ContentLength = 27;
-    headers[HeaderNames.ContentType] = "application/json";
+            return response.Writer.WriteAsync(payload).AsTask();
+        });
 
-    return JsonSerializer.SerializeAsync(
-        response.Stream, 
-        new JsonMessage { message = "Hello, World!" }, 
-        Settings.SerializerOptions);
+
+        app.Get("/json", (request, response) =>
+        {
+            Microsoft.AspNetCore.Http.IHeaderDictionary headers = response.Headers;
+
+            headers.ContentLength = 27;
+            headers[HeaderNames.ContentType] = "application/json";
+
+            return JsonSerializer.SerializeAsync(
+                response.Stream,
+                new JsonMessage { message = "Hello, World!" },
+                Settings.SerializerOptions);
+        });
+
+        Write($"{server} {app}"); // Display listening info
+
+        await server.RunAsync(app);
+    }
 }
 
 // Settings and datastructures
-struct JsonMessage { public string message { get; set; } }
+internal struct JsonMessage { public string message { get; set; } }
 
-static class Settings
+internal static class Settings
 {
     public static readonly byte[] HelloWorld = Encoding.UTF8.GetBytes("Hello, World!");
-    public static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions(new JsonSerializerOptions { });
+    public static readonly JsonSerializerOptions SerializerOptions = new(new JsonSerializerOptions { });
 }

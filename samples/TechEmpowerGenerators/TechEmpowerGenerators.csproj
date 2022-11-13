@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <RootNamespace>PlaintextJson</RootNamespace>
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
     <IsPackable>false</IsPackable>
     <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+	<PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="5.0.1.1" />
+    <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.0" />
+    <PackageReference Include="Npgsql" Version="7.0.0" />
   </ItemGroup>
   
   <ItemGroup>
