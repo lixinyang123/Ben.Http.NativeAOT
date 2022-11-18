@@ -6,6 +6,7 @@
     <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
     <GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
 	<PublishAot>true</PublishAot>
+	<StripSymbols>true</StripSymbols>
   </PropertyGroup>
 
   <ItemGroup>
