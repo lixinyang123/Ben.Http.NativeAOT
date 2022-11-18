@@ -26,7 +26,7 @@ Mostly its an example to derive from.
 Windows
 
 ```bash
-Install Visual Studio 2022, including Desktop development with C++ workload.
+Visual Studio 2022, including Desktop development with C++ workload.
 ```
 
 Ubuntu (20.04+)
@@ -34,8 +34,6 @@ Ubuntu (20.04+)
 ```bash
 sudo apt-get install libicu-dev cmake
 ```
-
-
 
 ### Build
 
@@ -63,21 +61,6 @@ dotnet build
   dotnet publish -r osx-arm64 -c Release
   ```
 
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for information on contributing to this project.
-
-This project has adopted the code of conduct defined by the [Contributor Covenant](http://contributor-covenant.org/) 
-to clarify expected behavior in our community. For more information, see the [.NET Foundation Code of Conduct](http://www.dotnetfoundation.org/code-of-conduct).
-
-## License
-
-This project is licensed with the [MIT license](LICENSE).
-
-## .NET Foundation
-
-Ben.Http is a [.NET Foundation project](https://dotnetfoundation.org/projects).
-
 ## Related Projects
 
 You should take a look at these related projects:
@@ -85,4 +68,4 @@ You should take a look at these related projects:
 - [.NET 7](https://github.com/dotnet/runtime)
 - [ASP.NET](https://github.com/aspnet)
 - [NativeAOT](https://github.com/dotnet/runtime/tree/main/src/coreclr/nativeaot)
-- [Mono](https://github.com/mono)
+- [Ben.Http](https://github.com/benaadams/Ben.Http)
