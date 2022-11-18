@@ -3,7 +3,7 @@
 
 [![NuGet version (Ben.Http)](https://img.shields.io/nuget/v/Ben.Http.svg?style=flat-square)](https://www.nuget.org/packages/Ben.Http/)
 
-Low level ASP.NET Core example web server
+Low level ASP.NET Core example web server with NativeAOT example.
 
 An example of using the ASP.NET Core servers for a .NET web application without any of the rest of the framework (e.g. Hosting, DI, middleware etc). So you can create your own distinct opinionated framework.
 
@@ -21,25 +21,47 @@ Mostly its an example to derive from.
 
 ## Building
 
-`dotnet build -c Release` will build the project.
+### Prerequisites
 
-Of note a there is a `samples/PlaintextJsonRaw` project that then uses this server to create an application that implements the Techempower plaintext and json tests. This is a single file server that you can run from that directory with:
+Windows
 
-`dotnet run -c Release` 
+```bash
+Install Visual Studio 2022, including Desktop development with C++ workload.
+```
 
-Also there is a `samples/TechEmpowerGenerators` project that then uses this server plus some extension methods to create an application that implements the Techempower plaintext, json and fortunes tests in a simpler manner than the Raw. This is again a single file server:
+Ubuntu (20.04+)
 
-![image](https://user-images.githubusercontent.com/1142958/105080682-14becc80-5a89-11eb-8864-d67c486eaea8.png)
+```bash
+sudo apt-get install libicu-dev cmake
+```
 
-You can run from that directory with:
 
-`dotnet run -c Release` 
 
-And it will set up a server listening on port `8080` and responding to the paths `/plaintext`, `/json`, `/db` and `/fortunes`. You also need to pass the postgres connection string in via `connection` enviorment variable:
+### Build
 
-![image](https://user-images.githubusercontent.com/1142958/103061598-beeb2780-45a3-11eb-9e56-d886530b2e2e.png)
+```bash
+dotnet build
+```
 
-Have fun!
+### Publish with NativeAOT
+
+- Windows
+  ```bash
+  dotnet publish -r win-x64 -c Release
+  dotnet publish -r win-arm64 -c Release
+  ```
+ 
+- Linux
+   ```bash
+  dotnet publish -r linux-x64 -c Release
+  dotnet publish -r linux-arm64 -c Release
+  ```
+  
+- MacOS
+  ```bash
+  dotnet publish -r osx-x64 -c Release
+  dotnet publish -r osx-arm64 -c Release
+  ```
 
 ## Contributing
 
@@ -60,6 +82,7 @@ Ben.Http is a [.NET Foundation project](https://dotnetfoundation.org/projects).
 
 You should take a look at these related projects:
 
-- [.NET Core](https://github.com/dotnet/core)
+- [.NET 7](https://github.com/dotnet/runtime)
 - [ASP.NET](https://github.com/aspnet)
+- [NativeAOT](https://github.com/dotnet/runtime/tree/main/src/coreclr/nativeaot)
 - [Mono](https://github.com/mono)
