@@ -1,15 +1,13 @@
 using Ben.Http;
 using Microsoft.Net.Http.Headers;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using static System.Console;
 
 internal class Program
 {
-    [RequiresDynamicCode("Calls System.Text.Json.JsonSerializer.SerializeAsync<TValue>(Stream, TValue, JsonSerializerOptions, CancellationToken)")]
-    [RequiresUnreferencedCode("Calls System.Text.Json.JsonSerializer.SerializeAsync<TValue>(Stream, TValue, JsonSerializerOptions, CancellationToken)")]
     private static async Task Main(string[] args)
     {
         int port = 8080;
@@ -30,7 +28,6 @@ internal class Program
             return response.Writer.WriteAsync(payload).AsTask();
         });
 
-
         app.Get("/json", (request, response) =>
         {
             Microsoft.AspNetCore.Http.IHeaderDictionary headers = response.Headers;
@@ -38,10 +35,10 @@ internal class Program
             headers.ContentLength = 27;
             headers[HeaderNames.ContentType] = "application/json";
 
-            return JsonSerializer.SerializeAsync(
-                response.Stream,
-                new JsonMessage { message = "Hello, World!" },
-                Settings.SerializerOptions);
+            return JsonSerializer.SerializeAsync(response.Stream, new JsonMessage 
+            {
+                Message = "Hello, World!" 
+            }, JsonContext.Default.JsonMessage);
         });
 
         Write($"{server} {app}"); // Display listening info
@@ -51,7 +48,10 @@ internal class Program
 }
 
 // Settings and datastructures
-internal struct JsonMessage { public string message { get; set; } }
+internal class JsonMessage { public string Message { get; set; } }
+
+[JsonSerializable(typeof(JsonMessage))]
+internal partial class JsonContext : JsonSerializerContext { }
 
 internal static class Settings
 {
