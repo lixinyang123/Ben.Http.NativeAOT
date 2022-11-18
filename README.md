@@ -2,7 +2,7 @@
 
 [![NuGet version (Ben.Http)](https://img.shields.io/nuget/v/Ben.Http.svg?style=flat-square)](https://www.nuget.org/packages/Ben.Http/)
 
-Low level ASP.NET Core example web server with NativeAOT.
+Low level ASP.NET Core example web server with NativeAOT. (Size 8MB)
 
 An example of using the ASP.NET Core servers for a .NET web application without any of the rest of the framework (e.g. Hosting, DI, middleware etc). So you can create your own distinct opinionated framework.
 
