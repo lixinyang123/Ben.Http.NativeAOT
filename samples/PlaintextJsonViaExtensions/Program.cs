@@ -1,5 +1,6 @@
 using Ben.Http;
 using System;
+using System.Text.Json.Serialization;
 
 (HttpServer server, HttpApp app) = (new HttpServer($"http://+:8080"), new HttpApp());
 
@@ -9,7 +10,7 @@ app.Get("/plaintext", () => "Hello, World!");
 app.Get("/json", (req, res) =>
 {
     res.Headers.ContentLength = 27;
-    return res.Json(new Note { message = "Hello, World!" });
+    return res.Json(new Note { Message = "Hello, World!" }, JsonContext.Default.Note.Type);
 });
 
 Console.Write($"{server} {app}"); // Display listening info
@@ -18,4 +19,7 @@ Console.Write($"{server} {app}"); // Display listening info
 await server.RunAsync(app);
 
 // Datastructures
-internal struct Note { public string message { get; set; } }
+internal struct Note { public string Message { get; set; } }
+
+[JsonSerializable(typeof(Note))]
+internal partial class JsonContext : JsonSerializerContext { }

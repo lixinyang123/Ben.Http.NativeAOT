@@ -33,6 +33,15 @@ namespace Ben.Http
             return Task.CompletedTask;
         }
 
+        public static Task Json(this Response response, object value, Type inputType)
+        {
+            response.Headers[HeaderNames.ContentType] = "application/json";
+
+            JsonSerializer.Serialize(GetJsonWriter(response), value, inputType, SerializerOptions);
+
+            return Task.CompletedTask;
+        }
+
         public static Task NotFound(this Response response)
         {
             response.StatusCode = 404;
