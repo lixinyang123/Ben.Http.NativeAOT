@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.Hosting.Server;
+﻿using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Abstractions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Net.Http.Headers;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Ben.Http
 {
@@ -23,18 +22,18 @@ namespace Ben.Http
 
         public void Get(string path, Func<string> handler)
         {
-            var utf8String = Encoding.UTF8.GetBytes(handler());
+            byte[] utf8String = Encoding.UTF8.GetBytes(handler());
 
             _routes[path] = (req, res) =>
             {
-                var headers = res.Headers;
+                Microsoft.AspNetCore.Http.IHeaderDictionary headers = res.Headers;
                 ReadOnlySpan<byte> data = utf8String;
 
                 headers.ContentLength = data.Length;
                 headers[HeaderNames.ContentType] = "text/plain";
 
-                var writer = res.Writer;
-                var output = writer.GetSpan(data.Length);
+                System.IO.Pipelines.PipeWriter writer = res.Writer;
+                Span<byte> output = writer.GetSpan(data.Length);
 
                 data.CopyTo(output);
                 writer.Advance(data.Length);
@@ -45,11 +44,11 @@ namespace Ben.Http
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine($"Paths:");
-            foreach (var path in _routes.Keys)
+            StringBuilder sb = new();
+            _ = sb.AppendLine($"Paths:");
+            foreach (string path in _routes.Keys)
             {
-                sb.AppendLine($"=> {path}");
+                _ = sb.AppendLine($"=> {path}");
             }
 
             return sb.ToString();
@@ -60,7 +59,7 @@ namespace Ben.Http
 
         private IEnumerable<string> PathsEnumerable()
         {
-            foreach (var path in _routes.Keys)
+            foreach (string path in _routes.Keys)
             {
                 yield return path;
             }
@@ -68,10 +67,10 @@ namespace Ben.Http
 
         Task IHttpApplication<Context>.ProcessRequestAsync(Context context)
         {
-            var request = context.Request;
-            var response = context.Response;
+            Request request = context.Request;
+            Response response = context.Response;
             response.Headers[HeaderNames.Server] = "Ben";
-            if (_routes.TryGetValue(request.Path, out var handler))
+            if (_routes.TryGetValue(request.Path, out RequestHandler? handler))
             {
                 return handler(request, context.Response);
             }
@@ -87,10 +86,7 @@ namespace Ben.Http
             {
                 // The server allows us to store the HttpContext on the connection
                 // between requests so we don't have to reallocate it each time.
-                if (container.HostContext is null)
-                {
-                    container.HostContext = new Context();
-                }
+                container.HostContext ??= new Context();
             }
 
             context.Initialize(features);
@@ -98,8 +94,10 @@ namespace Ben.Http
             return context;
         }
 
-        void IHttpApplication<Context>.DisposeContext(Context context, Exception? exception) =>
+        void IHttpApplication<Context>.DisposeContext(Context context, Exception? exception)
+        {
             // As we may be pooling the HttpContext above; Reset its settings.
             context.Reset();
+        }
     }
 }

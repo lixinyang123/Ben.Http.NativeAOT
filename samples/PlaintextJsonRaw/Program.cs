@@ -35,9 +35,9 @@ internal class Program
             headers.ContentLength = 27;
             headers[HeaderNames.ContentType] = "application/json";
 
-            return JsonSerializer.SerializeAsync(response.Stream, new JsonMessage 
+            return JsonSerializer.SerializeAsync(response.Stream, new JsonMessage
             {
-                Message = "Hello, World!" 
+                Message = "Hello, World!"
             }, JsonContext.Default.JsonMessage);
         });
 

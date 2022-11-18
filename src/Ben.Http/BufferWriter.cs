@@ -5,53 +5,49 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
-namespace Ben.Http.Templates
+namespace Ben.Http
 {
     [SkipLocalsInit]
     public ref struct BufferWriter<T> where T : IBufferWriter<byte>
     {
-        private T _output;
-        private Span<byte> _span;
-        private int _buffered;
-
         public BufferWriter(T output, int sizeHint)
         {
-            _buffered = 0;
-            _output = output;
-            _span = output.GetSpan(sizeHint);
+            Buffered = 0;
+            Output = output;
+            Span = output.GetSpan(sizeHint);
         }
 
-        public Span<byte> Span => _span;
+        public Span<byte> Span { get; private set; }
 
-        public T Output => _output;
+        public T Output { get; }
 
-        public int Buffered => _buffered;
-        public int Remaining => _span.Length - _buffered;
+        public int Buffered { get; private set; }
+        public int Remaining => Span.Length - Buffered;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Commit()
         {
-            var buffered = _buffered;
+            int buffered = Buffered;
             if (buffered > 0)
             {
-                _buffered = 0;
-                _output.Advance(buffered);
+                Buffered = 0;
+                Output.Advance(buffered);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Advance(int count)
         {
-            _buffered += count;
-            _span = _span.Slice(count);
+            Buffered += count;
+            Span = Span[count..];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Write(ReadOnlySpan<byte> source)
         {
-            if (_span.Length >= source.Length)
+            if (Span.Length >= source.Length)
             {
-                source.CopyTo(_span);
+                source.CopyTo(Span);
                 Advance(source.Length);
             }
             else
@@ -63,7 +59,7 @@ namespace Ben.Http.Templates
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Ensure(int count = 1)
         {
-            if (_span.Length < count)
+            if (Span.Length < count)
             {
                 EnsureMore(count);
             }
@@ -72,26 +68,26 @@ namespace Ben.Http.Templates
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void EnsureMore(int count = 0)
         {
-            if (_buffered > 0)
+            if (Buffered > 0)
             {
                 Commit();
             }
 
-            _span = _output.GetSpan(count);
+            Span = Output.GetSpan(count);
         }
 
         private void WriteMultiBuffer(ReadOnlySpan<byte> source)
         {
             while (source.Length > 0)
             {
-                if (_span.Length == 0)
+                if (Span.Length == 0)
                 {
                     EnsureMore();
                 }
 
-                var writable = Math.Min(source.Length, _span.Length);
-                source.Slice(0, writable).CopyTo(_span);
-                source = source.Slice(writable);
+                int writable = Math.Min(source.Length, Span.Length);
+                source[..writable].CopyTo(Span);
+                source = source[writable..];
                 Advance(writable);
             }
         }
@@ -101,10 +97,10 @@ namespace Ben.Http.Templates
         {
             const byte AsciiDigitStart = (byte)'0';
 
-            var span = this.Span;
+            Span<byte> span = Span;
 
             // Fast path, try copying to the available memory directly
-            var advanceBy = 0;
+            int advanceBy = 0;
             if (span.Length >= 3)
             {
                 if (number < 10)
@@ -114,7 +110,7 @@ namespace Ben.Http.Templates
                 }
                 else if (number < 100)
                 {
-                    var tens = (byte)((number * 205u) >> 11); // div10, valid to 1028
+                    byte tens = (byte)((number * 205u) >> 11); // div10, valid to 1028
 
                     span[0] = (byte)(tens + AsciiDigitStart);
                     span[1] = (byte)(number - (tens * 10) + AsciiDigitStart);
@@ -122,8 +118,8 @@ namespace Ben.Http.Templates
                 }
                 else if (number < 1000)
                 {
-                    var digit0 = (byte)((number * 41u) >> 12); // div100, valid to 1098
-                    var digits01 = (byte)((number * 205u) >> 11); // div10, valid to 1028
+                    byte digit0 = (byte)((number * 41u) >> 12); // div100, valid to 1098
+                    byte digits01 = (byte)((number * 205u) >> 11); // div10, valid to 1028
 
                     span[0] = (byte)(digit0 + AsciiDigitStart);
                     span[1] = (byte)(digits01 - (digit0 * 10) + AsciiDigitStart);
@@ -138,7 +134,7 @@ namespace Ben.Http.Templates
             }
             else
             {
-                BufferExtensions.WriteNumericMultiWrite(ref this, number);
+                this.WriteNumericMultiWrite(number);
             }
         }
     }
@@ -149,7 +145,7 @@ namespace Ben.Http.Templates
         private static HtmlEncoder HtmlEncoder { get; } = CreateHtmlEncoder();
         private static HtmlEncoder CreateHtmlEncoder()
         {
-            var settings = new TextEncoderSettings(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
+            TextEncoderSettings settings = new(UnicodeRanges.BasicLatin, UnicodeRanges.Katakana, UnicodeRanges.Hiragana);
             settings.AllowCharacter('\u2014');  // allow EM DASH through
             return HtmlEncoder.Create(settings);
         }
@@ -162,7 +158,9 @@ namespace Ben.Http.Templates
 
         public static void WriteUtf8String<T>(ref this BufferWriter<T> buffer, string text)
              where T : IBufferWriter<byte>
-            => buffer.WriteUtf8String(text.AsSpan());
+        {
+            buffer.WriteUtf8String(text.AsSpan());
+        }
 
         public static void WriteUtf8String<T>(ref this BufferWriter<T> buffer, ReadOnlySpan<char> text)
              where T : IBufferWriter<byte>
@@ -171,11 +169,11 @@ namespace Ben.Http.Templates
 
             if (buffer.Remaining < text.Length * MaxPerUtf8Char)
             {
-                var count = Encoding.UTF8.GetByteCount(text);
+                int count = Encoding.UTF8.GetByteCount(text);
                 buffer.Ensure(count);
             }
 
-            var byteCount = Encoding.UTF8.GetBytes(text, buffer.Span);
+            int byteCount = Encoding.UTF8.GetBytes(text, buffer.Span);
             buffer.Advance(byteCount);
         }
 
@@ -187,36 +185,41 @@ namespace Ben.Http.Templates
 
             char[]? array = null;
             Span<char> output = stackalloc char[StackAllocThresholdChars];
+
             // Need largest size, can't do multiple rounds of encoding due to https://github.com/dotnet/runtime/issues/45994
             if ((long)input.Length * MaxPerHtmlChar <= StackAllocThresholdChars)
             {
-                var status = HtmlEncoder.Encode(input, output, out int charsConsumed, out int charsWritten, isFinalBlock: true);
+                OperationStatus status = HtmlEncoder.Encode(input, output, out int charsConsumed, out int charsWritten, isFinalBlock: true);
 
                 if (status != OperationStatus.Done)
+                {
                     throw new InvalidOperationException("Invalid Data");
+                }
 
-                output = output.Slice(0, charsWritten);
+                output = output[..charsWritten];
             }
             else
             {
                 array = ArrayPool<char>.Shared.Rent(input.Length * MaxPerHtmlChar);
                 output = array;
 
-                var status = HtmlEncoder.Encode(input, output, out _, out int charsWritten, isFinalBlock: true);
+                OperationStatus status = HtmlEncoder.Encode(input, output, out _, out int charsWritten, isFinalBlock: true);
 
                 if (status != OperationStatus.Done)
+                {
                     throw new InvalidOperationException("Invalid Data");
+                }
 
-                output = output.Slice(0, charsWritten);
+                output = output[..charsWritten];
             }
 
             if (buffer.Remaining < output.Length * MaxPerUtf8Char)
             {
-                var count = Encoding.UTF8.GetByteCount(output);
+                int count = Encoding.UTF8.GetByteCount(output);
                 buffer.Ensure(count);
             }
 
-            var byteCount = Encoding.UTF8.GetBytes(output, buffer.Span);
+            int byteCount = Encoding.UTF8.GetBytes(output, buffer.Span);
             buffer.Advance(byteCount);
 
             if (array is not null)
@@ -231,19 +234,19 @@ namespace Ben.Http.Templates
         {
             const byte AsciiDigitStart = (byte)'0';
 
-            var value = number;
-            var position = MaxULongByteLength;
+            uint value = number;
+            int position = MaxULongByteLength;
             Span<byte> byteBuffer = NumericBytesScratch;
             do
             {
                 // Consider using Math.DivRem() if available
-                var quotient = value / 10;
-                byteBuffer[--position] = (byte)(AsciiDigitStart + (value - quotient * 10)); // 0x30 = '0'
+                uint quotient = value / 10;
+                byteBuffer[--position] = (byte)(AsciiDigitStart + (value - (quotient * 10))); // 0x30 = '0'
                 value = quotient;
             }
             while (value != 0);
 
-            var length = MaxULongByteLength - position;
+            int length = MaxULongByteLength - position;
             buffer.Write(byteBuffer.Slice(position, length));
         }
 
@@ -252,7 +255,7 @@ namespace Ben.Http.Templates
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static byte[] CreateNumericBytesScratch()
         {
-            var bytes = new byte[MaxULongByteLength];
+            byte[] bytes = new byte[MaxULongByteLength];
             s_numericBytesScratch = bytes;
             return bytes;
         }

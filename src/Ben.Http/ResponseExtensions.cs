@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Microsoft.Net.Http.Headers;
+using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-
-using Microsoft.Net.Http.Headers;
 
 namespace Ben.Http
 {
@@ -10,13 +9,13 @@ namespace Ben.Http
     {
         public static Task Text(this Response response, ReadOnlySpan<byte> utf8String)
         {
-            var headers = response.Headers;
+            Microsoft.AspNetCore.Http.IHeaderDictionary headers = response.Headers;
 
             headers.ContentLength = utf8String.Length;
             headers[HeaderNames.ContentType] = "text/plain";
 
-            var writer = response.Writer;
-            var output = writer.GetSpan(utf8String.Length);
+            System.IO.Pipelines.PipeWriter writer = response.Writer;
+            Span<byte> output = writer.GetSpan(utf8String.Length);
 
             utf8String.CopyTo(output);
             writer.Advance(utf8String.Length);
@@ -51,7 +50,7 @@ namespace Ben.Http
 
         [ThreadStatic]
         private static Utf8JsonWriter t_writer = null!;
-        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions(new JsonSerializerOptions { });
+        private static readonly JsonSerializerOptions SerializerOptions = new(new JsonSerializerOptions { });
 
         private static Utf8JsonWriter GetJsonWriter(Response response)
         {

@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.IO.Pipelines;
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using System.IO;
+using System.IO.Pipelines;
 
 namespace Ben.Http
 {
@@ -26,11 +25,14 @@ namespace Ben.Http
 
     public class Request
     {
-        private IFeatureCollection _features = null!;
-        private IHttpRequestFeature? _request;
-        private IHttpRequestFeature RequestFeature => _request ??= _features.Get<IHttpRequestFeature>();
+        private IFeatureCollection features = null!;
+        private IHttpRequestFeature? request;
+        private IHttpRequestFeature RequestFeature => request ??= features.Get<IHttpRequestFeature>() ?? throw new System.NullReferenceException();
 
-        internal void Initialize(IFeatureCollection features) => _features = features;
+        internal void Initialize(IFeatureCollection features)
+        {
+            this.features = features;
+        }
 
         /// <summary>
         /// The HTTP-version as defined in RFC 7230. E.g. "HTTP/1.1"
@@ -81,27 +83,33 @@ namespace Ben.Http
         /// </summary>
         public Stream Body => RequestFeature.Body;
 
-        internal void Reset() => _request = null;
+        internal void Reset()
+        {
+            request = null;
+        }
     }
 
     public class Response
     {
-        private IFeatureCollection _features = null!;
-        private IHttpResponseFeature? _response;
+        private IFeatureCollection features = null!;
+        private IHttpResponseFeature? response;
         private IHttpResponseBodyFeature? _responseBody;
 
-        private IHttpResponseFeature ResponseFeature => _response ??= _features.Get<IHttpResponseFeature>();
-        private IHttpResponseBodyFeature ResponseBody => _responseBody ??= _features.Get<IHttpResponseBodyFeature>();
+        private IHttpResponseFeature ResponseFeature => response ??= features.Get<IHttpResponseFeature>() ?? throw new System.NullReferenceException();
+        private IHttpResponseBodyFeature ResponseBody => _responseBody ??= features.Get<IHttpResponseBodyFeature>() ?? throw new System.NullReferenceException();
 
-        internal void Initialize(IFeatureCollection features) => _features = features;
+        internal void Initialize(IFeatureCollection features)
+        {
+            this.features = features;
+        }
 
         /// <summary>
         ///  The status-code as defined in RFC 7230. The default value is 200.
         /// </summary>
-        public int StatusCode 
-        { 
-            get => ResponseFeature.StatusCode; 
-            set => ResponseFeature.StatusCode = value; 
+        public int StatusCode
+        {
+            get => ResponseFeature.StatusCode;
+            set => ResponseFeature.StatusCode = value;
         }
 
         /// <summary>
@@ -121,7 +129,7 @@ namespace Ben.Http
 
         internal void Reset()
         {
-            _response = null;
+            response = null;
             _responseBody = null;
         }
     }

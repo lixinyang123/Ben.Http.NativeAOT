@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30803.129
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33103.201
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ben.Http", "src\Ben.Http\Ben.Http.csproj", "{2B45DAC1-5348-4C26-80B9-DDF0CE69F594}"
 EndProject
@@ -10,10 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaintextJsonRaw", "samples\PlaintextJsonRaw\PlaintextJsonRaw.csproj", "{2861332A-2870-48E7-A8D3-4D4577FF8A13}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaintextJsonViaExtensions", "samples\PlaintextJsonViaExtensions\PlaintextJsonViaExtensions.csproj", "{411A3FE0-F1B5-4C5C-906E-E55487D87085}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ben.Http.Generator", "src\Ben.Http.Generator\Ben.Http.Generator.csproj", "{AFFB2691-4CCC-4601-982B-48AE1FEFA7EF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechEmpowerGenerators", "samples\TechEmpowerGenerators\TechEmpowerGenerators.csproj", "{08EB7316-F057-41F7-BDA3-BA4161962015}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +29,6 @@ Global
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AFFB2691-4CCC-4601-982B-48AE1FEFA7EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AFFB2691-4CCC-4601-982B-48AE1FEFA7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AFFB2691-4CCC-4601-982B-48AE1FEFA7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AFFB2691-4CCC-4601-982B-48AE1FEFA7EF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08EB7316-F057-41F7-BDA3-BA4161962015}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08EB7316-F057-41F7-BDA3-BA4161962015}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08EB7316-F057-41F7-BDA3-BA4161962015}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08EB7316-F057-41F7-BDA3-BA4161962015}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,7 +36,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2861332A-2870-48E7-A8D3-4D4577FF8A13} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
-		{08EB7316-F057-41F7-BDA3-BA4161962015} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFA681B7-6567-4E2D-812B-F3B58D8899AE}
