@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaintextJsonRaw", "samples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PlaintextJsonViaExtensions", "samples\PlaintextJsonViaExtensions\PlaintextJsonViaExtensions.csproj", "{411A3FE0-F1B5-4C5C-906E-E55487D87085}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DependencyInjection", "samples\DependencyInjection\DependencyInjection.csproj", "{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +42,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2861332A-2870-48E7-A8D3-4D4577FF8A13} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
 		{411A3FE0-F1B5-4C5C-906E-E55487D87085} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
+		{B406BED1-B54E-4E9B-8A57-BC09FFACDF7F} = {8E57D308-1B05-46EA-8E8B-C365DD6574FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AFA681B7-6567-4E2D-812B-F3B58D8899AE}

@@ -22,23 +22,23 @@ namespace Ben.Http
         private readonly ILoggerFactory loggerFactory;
         private readonly IServer server;
 
-        public IFeatureCollection? Features => server.Features;
+        public IFeatureCollection Features => server.Features;
 
         public HttpServer(string listenAddress) : this(DefaultLoggerFactories.Empty)
         {
-            addresses = Features.Get<IServerAddressesFeature>();
+            addresses = Features.Get<IServerAddressesFeature>() ?? throw new NullReferenceException();
             addresses.Addresses.Add(listenAddress);
         }
 
         public HttpServer(string listenAddress, ILoggerFactory loggerFactory) : this(loggerFactory)
         {
-            addresses = Features.Get<IServerAddressesFeature>();
+            addresses = Features.Get<IServerAddressesFeature>() ?? throw new NullReferenceException();
             addresses.Addresses.Add(listenAddress);
         }
 
         public HttpServer(IEnumerable<string> listenAddresses, ILoggerFactory loggerFactory) : this(loggerFactory)
         {
-            addresses = Features.Get<IServerAddressesFeature>();
+            addresses = Features.Get<IServerAddressesFeature>() ?? throw new NullReferenceException();
             foreach (string uri in listenAddresses)
             {
                 addresses.Addresses.Add(uri);
