@@ -69,3 +69,4 @@ You should take a look at these related projects:
 - [NativeAOT](https://github.com/dotnet/runtime/tree/main/src/coreclr/nativeaot)
 - [Ben.Http](https://github.com/benaadams/Ben.Http)
 - [PublishAotCompressed](https://github.com/MichalStrehovsky/PublishAotCompressed)
+- [jab](https://github.com/pakrym/jab)
