@@ -4,7 +4,7 @@
 
 Low level ASP.NET Core example web server with NativeAOT. `~3MB size`
 
-An example of using the ASP.NET Core servers for a .NET web application without any of the rest of the framework (e.g. Hosting, DI, middleware etc). So you can create your own distinct opinionated framework.
+An example of using the ASP.NET Core servers for a .NET web application without any of the rest of the framework (e.g. Hosting, middleware etc). So you can create your own distinct opinionated framework.
 
 ## Using Ben.Http
 
