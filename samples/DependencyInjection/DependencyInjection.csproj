@@ -11,7 +11,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Jab" Version="0.8.6" />
-		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.1" />
+		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.2" />
 		<PackageReference Include="PublishAotCompressed" Version="1.0.0" />
 	</ItemGroup>
 
