@@ -2,7 +2,7 @@
 
 [![NuGet version (Ben.Http)](https://img.shields.io/nuget/v/Ben.Http.svg?style=flat-square)](https://www.nuget.org/packages/Ben.Http/)
 
-Low level ASP.NET Core example web server with NativeAOT. `~3MB size`
+Low level ASP.NET Core example web server with NativeAOT. `~2.5MB size`
 
 An example of using the ASP.NET Core servers for a .NET web application without any of the rest of the framework (e.g. Hosting, middleware etc). So you can create your own distinct opinionated framework.
 
@@ -64,7 +64,7 @@ dotnet build
 
 You should take a look at these related projects:
 
-- [.NET 7](https://github.com/dotnet/runtime)
+- [.NET 8](https://github.com/dotnet/runtime)
 - [ASP.NET](https://github.com/aspnet)
 - [NativeAOT](https://github.com/dotnet/runtime/tree/main/src/coreclr/nativeaot)
 - [Ben.Http](https://github.com/benaadams/Ben.Http)
