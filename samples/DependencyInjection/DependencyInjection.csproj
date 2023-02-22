@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<RootNamespace>DependencyInjection</RootNamespace>
 		<NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
 		<GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
@@ -11,7 +11,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Jab" Version="0.8.6" />
-		<PackageReference Include="Microsoft.DotNet.ILCompiler" Version="7.0.2" />
 		<PackageReference Include="PublishAotCompressed" Version="1.0.0" />
 	</ItemGroup>
 
