@@ -8,7 +8,7 @@ using static System.Console;
 
 internal class Program
 {
-    private static async Task Main(string[] args)
+    private static async Task Main(string[] _)
     {
         int port = 8080;
 
@@ -18,7 +18,7 @@ internal class Program
         // Assign routes
         app.Get("/plaintext", (request, response) =>
         {
-            byte[] payload = Settings.HelloWorld;
+            byte[] payload = Encoding.UTF8.GetBytes("Hello, World!");
 
             Microsoft.AspNetCore.Http.IHeaderDictionary headers = response.Headers;
 
@@ -47,14 +47,8 @@ internal class Program
     }
 }
 
-// Settings and datastructures
+// Datastructures
 internal class JsonMessage { public string Message { get; set; } }
 
 [JsonSerializable(typeof(JsonMessage))]
 internal partial class JsonContext : JsonSerializerContext { }
-
-internal static class Settings
-{
-    public static readonly byte[] HelloWorld = Encoding.UTF8.GetBytes("Hello, World!");
-    public static readonly JsonSerializerOptions SerializerOptions = new(new JsonSerializerOptions { });
-}

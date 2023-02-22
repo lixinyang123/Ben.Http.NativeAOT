@@ -1,6 +1,7 @@
 ﻿using Microsoft.Net.Http.Headers;
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace Ben.Http
@@ -23,20 +24,11 @@ namespace Ben.Http
             return Task.CompletedTask;
         }
 
-        public static Task Json<TValue>(this Response response, TValue value)
+        public static Task Json(this Response response, object value, JsonTypeInfo inputType)
         {
             response.Headers[HeaderNames.ContentType] = "application/json";
 
-            JsonSerializer.Serialize(GetJsonWriter(response), value, SerializerOptions);
-
-            return Task.CompletedTask;
-        }
-
-        public static Task Json(this Response response, object value, Type inputType)
-        {
-            response.Headers[HeaderNames.ContentType] = "application/json";
-
-            JsonSerializer.Serialize(GetJsonWriter(response), value, inputType, SerializerOptions);
+            JsonSerializer.Serialize(GetJsonWriter(response), value, inputType);
 
             return Task.CompletedTask;
         }
@@ -48,13 +40,9 @@ namespace Ben.Http
             return Task.CompletedTask;
         }
 
-        [ThreadStatic]
-        private static Utf8JsonWriter t_writer = null!;
-        private static readonly JsonSerializerOptions SerializerOptions = new(new JsonSerializerOptions { });
-
         private static Utf8JsonWriter GetJsonWriter(Response response)
         {
-            Utf8JsonWriter utf8JsonWriter = t_writer ??= new Utf8JsonWriter(response.Writer, new JsonWriterOptions { SkipValidation = true });
+            Utf8JsonWriter utf8JsonWriter = new(response.Writer, new JsonWriterOptions { SkipValidation = true });
             utf8JsonWriter.Reset(response.Writer);
             return utf8JsonWriter;
         }

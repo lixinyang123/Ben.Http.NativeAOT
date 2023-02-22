@@ -9,8 +9,7 @@ app.Get("/plaintext", () => "Hello, World!");
 
 app.Get("/json", (req, res) =>
 {
-    res.Headers.ContentLength = 27;
-    return res.Json(new Note { Message = "Hello, World!" }, JsonContext.Default.Note.Type);
+    return res.Json(new Note { Message = "Hello, World!" }, JsonContext.Default.Note);
 });
 
 Console.Write($"{server} {app}"); // Display listening info
