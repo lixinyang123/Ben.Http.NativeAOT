@@ -12,7 +12,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Jab" Version="0.8.6" />
-		<PackageReference Include="PublishAotCompressed" Version="1.0.0" />
+		<PackageReference Include="PublishAotCompressed" Version="1.0.2" />
 	</ItemGroup>
 
 	<ItemGroup>
